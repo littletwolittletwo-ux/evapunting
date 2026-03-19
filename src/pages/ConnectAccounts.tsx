@@ -7,7 +7,7 @@ import { BOOKMAKERS } from '../types';
 interface BookmakerConnection {
   id: string;
   bookmaker_name: string;
-  username: string;
+  username: string | null;
   status: string;
   balance: number;
 }
@@ -102,7 +102,7 @@ export function ConnectAccounts() {
         .from('bookmaker_connections')
         .insert({
           user_id: user.id,
-          bookmaker_name: selectedBookmaker.name,
+          bookmaker_name: selectedBookmaker.name as any,
           email: formData.email,
           username: formData.username || null,
           password: formData.password,
@@ -125,8 +125,6 @@ export function ConnectAccounts() {
     }
   }
 
-  const isConnected = (bookmakerName: string) =>
-    connectedAccounts.some((acc) => acc.bookmaker_name === bookmakerName);
 
   const getAccountStatus = (bookmakerName: string) =>
     connectedAccounts.find((acc) => acc.bookmaker_name === bookmakerName);

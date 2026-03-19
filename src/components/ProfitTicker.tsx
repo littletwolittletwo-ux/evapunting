@@ -5,7 +5,6 @@ import { supabase } from '../lib/supabase';
 const BASE_PROFIT = 328000;
 
 export function ProfitTicker() {
-  const [totalProfit, setTotalProfit] = useState(BASE_PROFIT);
   const [displayProfit, setDisplayProfit] = useState(BASE_PROFIT);
 
   useEffect(() => {
@@ -28,14 +27,13 @@ export function ProfitTicker() {
   async function fetchTotalProfit() {
     try {
       const { data, error } = await supabase
-        .from('profit_history')
-        .select('daily_profit');
+        .from('betting_performance')
+        .select('total_profit');
 
       if (error) throw error;
 
-      const dbTotal = data?.reduce((sum, record) => sum + record.daily_profit, 0) || 0;
+      const dbTotal = data?.reduce((sum, record) => sum + (record.total_profit || 0), 0) || 0;
       const total = BASE_PROFIT + dbTotal;
-      setTotalProfit(total);
       setDisplayProfit(total);
     } catch (error) {
       console.error('Error fetching total profit:', error);

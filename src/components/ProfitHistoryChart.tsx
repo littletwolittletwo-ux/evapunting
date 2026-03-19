@@ -64,7 +64,7 @@ export function ProfitHistoryChart({ data }: ProfitHistoryChartProps) {
               color: isDarkMode ? '#10b981' : '#3b82f6',
               fontWeight: '600',
             }}
-            formatter={(value: number) => [`$${value.toFixed(2)}`, 'Profit']}
+            formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Profit']}
           />
           <Area
             type="monotone"

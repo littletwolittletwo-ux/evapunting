@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { TrendingUp, LayoutDashboard, Link as LinkIcon, User, LogOut, Shield, Menu, X, Sun, Moon } from 'lucide-react';
+import { TrendingUp, LayoutDashboard, Link as LinkIcon, User, LogOut, Shield, Menu, X, Sun, Moon, Coins, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { ProfitTicker } from '../ProfitTicker';
@@ -133,6 +133,18 @@ export function DashboardLayout() {
                 <User className="h-5 w-5" />
                 <span className="font-medium">Profile</span>
               </Link>
+              <Link
+                to="/billing"
+                onClick={closeSidebar}
+                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                  isActive('/billing')
+                    ? 'bg-gradient-to-r from-blue-100 to-green-100 dark:from-blue-500/20 dark:to-green-500/20 text-blue-700 dark:text-white border border-blue-300 dark:border-blue-500/30'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800/50'
+                }`}
+              >
+                <Coins className="h-5 w-5" />
+                <span className="font-medium">Billing</span>
+              </Link>
             </>
           )}
         </nav>
@@ -163,6 +175,21 @@ export function DashboardLayout() {
         </div>
       </aside>
       <main className="flex-1 overflow-auto lg:ml-64 pt-16 lg:pt-0">
+        {profile?.subscription_status === 'paused' && (
+          <div className="bg-amber-50 dark:bg-amber-500/10 border-b border-amber-200 dark:border-amber-500/30 px-4 py-3">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <AlertTriangle className="h-5 w-5 text-amber-500" />
+                <span className="text-sm font-medium text-amber-700 dark:text-amber-400">
+                  Your account is paused due to an outstanding balance.
+                </span>
+              </div>
+              <Link to="/billing" className="text-sm font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300">
+                Pay Now →
+              </Link>
+            </div>
+          </div>
+        )}
         <Outlet />
       </main>
     </div>

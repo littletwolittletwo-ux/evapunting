@@ -7,6 +7,14 @@ import { BOOKMAKERS } from '../types';
 import { ProfitHistoryChart } from '../components/ProfitHistoryChart';
 import { fetchAnalyticsData, AnalyticsData } from '../services/analyticsService';
 import '../styles/theme.css'; // Add this import for global theme styles
+import { useCountUp } from '../hooks/useCountUp';
+import { useTokenDebt } from '../hooks/useTokenDebt';
+import { BalanceTicker } from '../components/BalanceTicker';
+import { WinToast } from '../components/WinToast';
+import { WeeklyBillingSummaryModal } from '../components/WeeklyBillingSummaryModal';
+import { TokenDebtCard } from '../components/TokenDebtCard';
+import { MilestoneBadge } from '../components/MilestoneBadge';
+import { Flame } from 'lucide-react';
 
 interface BookmakerConnection {
   id: string;
@@ -27,6 +35,9 @@ export function Dashboard() {
   const [totalProfit, setTotalProfit] = useState(0);
   const [loading, setLoading] = useState(true);
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [winStreak, setWinStreak] = useState(0);
+  const [thisWeekProfit, setThisWeekProfit] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -60,6 +71,47 @@ export function Dashboard() {
 
       const analytics = await fetchAnalyticsData(user.id);
       setAnalyticsData(analytics);
+
+      // Win streak calculation
+      const { data: recentBets } = await supabase
+        .from('bets')
+        .select('settled_at, status')
+        .eq('user_id', user.id)
+        .eq('status', 'won')
+        .order('settled_at', { ascending: false })
+        .limit(50);
+
+      if (recentBets && recentBets.length > 0) {
+        const winDates = new Set(
+          recentBets.map(b => b.settled_at ? new Date(b.settled_at).toDateString() : null).filter(Boolean)
+        );
+        let streak = 0;
+        const today = new Date();
+        for (let i = 0; i < 30; i++) {
+          const d = new Date(today);
+          d.setDate(d.getDate() - i);
+          if (winDates.has(d.toDateString())) {
+            streak++;
+          } else if (i > 0) {
+            break;
+          }
+        }
+        setWinStreak(streak);
+      }
+
+      // This week's profit calculation
+      const weekProfit = (connections || []).reduce((sum: number, c: any) => sum + Number(c.net_profit_week || 0), 0);
+      setThisWeekProfit(weekProfit);
+
+      // Confetti on positive week profit (once per day)
+      if (weekProfit > 0) {
+        const confettiKey = `eva_confetti_${new Date().toISOString().slice(0,10)}`;
+        if (!localStorage.getItem(confettiKey)) {
+          setShowConfetti(true);
+          localStorage.setItem(confettiKey, 'true');
+          setTimeout(() => setShowConfetti(false), 5000);
+        }
+      }
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {
@@ -83,6 +135,16 @@ export function Dashboard() {
   const userShare = analyticsData?.userShare ?? displayedTotalProfit * 0.7;
   const evaFee = analyticsData?.evaFee ?? displayedTotalProfit * 0.3;
   const totalBetsPlaced = analyticsData?.totalBetsPlaced ?? 0;
+
+  // Token debt data used by TokenDebtCard component
+  useTokenDebt();
+
+  // Count-up animations for all stat values
+  const animatedBankroll = useCountUp(totalBankroll);
+  const animatedProfit = useCountUp(displayedTotalProfit);
+  const animatedUserShare = useCountUp(userShare);
+  const animatedEvaFee = useCountUp(evaFee);
+  const animatedBetsPlaced = useCountUp(totalBetsPlaced);
 
   if (bookmakerConnections.length === 0) {
     return (
@@ -112,15 +174,16 @@ export function Dashboard() {
     <div className="p-8 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-green-600 dark:from-blue-400 dark:to-green-400 bg-clip-text text-transparent mb-8">Dashboard</h1>
+        <BalanceTicker />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-blue-400 hover:shadow-xl transition-all">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Bankroll</span>
               <DollarSign className="h-5 w-5 text-gray-700 dark:text-gray-500" />
             </div>
             <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-              ${totalBankroll.toLocaleString()}
+              ${animatedBankroll.toLocaleString()}
             </p>
           </div>
 
@@ -130,7 +193,7 @@ export function Dashboard() {
               <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
             </div>
             <p className={`text-3xl font-bold ${displayedTotalProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-              ${displayedTotalProfit.toLocaleString()}
+              ${animatedProfit.toLocaleString()}
             </p>
           </div>
 
@@ -140,7 +203,7 @@ export function Dashboard() {
               <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
             <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-              ${userShare.toLocaleString()}
+              ${animatedUserShare.toLocaleString()}
             </p>
           </div>
 
@@ -150,7 +213,7 @@ export function Dashboard() {
               <Activity className="h-5 w-5 text-gray-700 dark:text-gray-500" />
             </div>
             <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-              ${evaFee.toLocaleString()}
+              ${animatedEvaFee.toLocaleString()}
             </p>
           </div>
 
@@ -160,9 +223,33 @@ export function Dashboard() {
               <Target className="h-5 w-5 text-green-600 dark:text-green-400" />
             </div>
             <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-              {totalBetsPlaced.toLocaleString()}
+              {animatedBetsPlaced.toLocaleString()}
             </p>
           </div>
+          <TokenDebtCard />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">This Week's Profit</span>
+              <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
+            </div>
+            <p className={`text-3xl font-bold ${thisWeekProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+              {thisWeekProfit.toLocaleString('en-AU', { style: 'currency', currency: 'AUD' })}
+            </p>
+          </div>
+          {winStreak >= 2 && (
+            <div className="bg-orange-50 dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-orange-200 dark:border-gray-700">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-orange-700 dark:text-gray-400">Win Streak</span>
+                <Flame className="h-5 w-5 text-orange-500" />
+              </div>
+              <p className="text-3xl font-bold text-orange-500">
+                {'\uD83D\uDD25'} {winStreak} day{winStreak !== 1 ? 's' : ''}
+              </p>
+            </div>
+          )}
         </div>
 
         {analyticsData && analyticsData.history.length > 0 && (
@@ -286,6 +373,31 @@ export function Dashboard() {
               Your accounts are being set up. Once our team completes the manual integration, your dashboard
               will automatically update with live betting data and performance statistics.
             </p>
+          </div>
+        )}
+
+        <WinToast />
+        <WeeklyBillingSummaryModal />
+        <MilestoneBadge />
+        {showConfetti && (
+          <div className="fixed inset-0 pointer-events-none z-50">
+            {Array.from({ length: 50 }).map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 rounded-full"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `-5%`,
+                  backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][i % 5],
+                  animation: `confettiFall ${2 + Math.random() * 3}s ease-in ${Math.random() * 2}s forwards`,
+                }}
+              />
+            ))}
+            <style>{`
+              @keyframes confettiFall {
+                to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+              }
+            `}</style>
           </div>
         )}
       </div>

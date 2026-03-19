@@ -19,6 +19,7 @@ import { Dashboard } from './pages/Dashboard';
 import { ConnectAccounts } from './pages/ConnectAccounts';
 import { Profile } from './pages/Profile';
 import { Admin } from './pages/Admin';
+import { Billing } from './pages/Billing';
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/connect-accounts" element={<ConnectAccounts />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/billing" element={<Billing />} />
           </Route>
 
           <Route

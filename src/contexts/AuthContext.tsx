@@ -7,9 +7,15 @@ interface UserProfile {
   email: string;
   full_name: string | null;
   phone: string | null;
-  subscription_status: 'trial' | 'active' | 'cancelled';
+  subscription_status: 'trial' | 'active' | 'cancelled' | 'paused';
   subscription_start_date: string;
-  is_admin: boolean;
+  is_admin: boolean | null;
+  token_balance: number;
+  token_debt: number;
+  stripe_customer_id: string | null;
+  stripe_payment_method_id: string | null;
+  external_user_id: string | null;
+  kyc_verified: boolean;
   created_at: string;
   updated_at: string;
 }
