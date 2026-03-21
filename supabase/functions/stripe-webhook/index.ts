@@ -21,8 +21,8 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    const supabaseUrl = Deno.env.get('APP_SUPABASE_URL')
+    const supabaseServiceKey = Deno.env.get('APP_SERVICE_ROLE_KEY')
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY')
     const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')
 
