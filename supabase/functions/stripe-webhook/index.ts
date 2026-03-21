@@ -12,11 +12,26 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  // Webhooks must be POST
+  if (req.method !== 'POST') {
+    return new Response(
+      JSON.stringify({ error: 'Method not allowed' }),
+      { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY')!
-    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')!
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY')
+    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')
+
+    if (!supabaseUrl || !supabaseServiceKey || !stripeSecretKey || !webhookSecret) {
+      return new Response(
+        JSON.stringify({ error: 'Server misconfiguration: missing environment variables' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
     const stripe = new Stripe(stripeSecretKey, {
@@ -35,7 +50,9 @@ serve(async (req) => {
       )
     }
 
-    // Verify webhook signature
+    // Verify webhook signature — this is the critical security check.
+    // constructEvent will throw if the signature is invalid, the body
+    // has been tampered with, or the webhook secret is wrong.
     let event: Stripe.Event
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
@@ -55,7 +72,7 @@ serve(async (req) => {
         // Find billing cycle(s) by stripe_payment_intent_id
         const { data: cycles, error: cyclesError } = await supabase
           .from('weekly_billing_cycles')
-          .select('id, user_id')
+          .select('id, user_id, status')
           .eq('stripe_payment_intent_id', paymentIntent.id)
 
         if (cyclesError) {
@@ -64,7 +81,11 @@ serve(async (req) => {
         }
 
         if (cycles && cycles.length > 0) {
-          const cycleIds = cycles.map((c: { id: string }) => c.id)
+          // Idempotency: skip if already paid
+          const unpaidCycles = cycles.filter((c: { status: string }) => c.status !== 'paid')
+          if (unpaidCycles.length === 0) break
+
+          const cycleIds = unpaidCycles.map((c: { id: string }) => c.id)
           const userId = cycles[0].user_id
 
           // Mark cycles as paid
@@ -99,7 +120,7 @@ serve(async (req) => {
         // Find billing cycle(s) by stripe_payment_intent_id
         const { data: cycles, error: cyclesError } = await supabase
           .from('weekly_billing_cycles')
-          .select('id, user_id')
+          .select('id, user_id, status')
           .eq('stripe_payment_intent_id', paymentIntent.id)
 
         if (cyclesError) {
@@ -108,7 +129,11 @@ serve(async (req) => {
         }
 
         if (cycles && cycles.length > 0) {
-          const cycleIds = cycles.map((c: { id: string }) => c.id)
+          // Idempotency: skip if already handled
+          const actionable = cycles.filter((c: { status: string }) => c.status !== 'failed' && c.status !== 'paid')
+          if (actionable.length === 0) break
+
+          const cycleIds = actionable.map((c: { id: string }) => c.id)
           const userId = cycles[0].user_id
 
           // Mark cycles as failed
@@ -131,6 +156,27 @@ serve(async (req) => {
         break
       }
 
+      case 'setup_intent.succeeded': {
+        // When a user saves a new payment method via SetupIntent
+        const setupIntent = event.data.object as Stripe.SetupIntent
+        const customerId = setupIntent.customer as string | null
+        const paymentMethodId = typeof setupIntent.payment_method === 'string'
+          ? setupIntent.payment_method
+          : (setupIntent.payment_method as { id: string } | null)?.id ?? null
+
+        if (customerId && paymentMethodId) {
+          // Update the user's default payment method
+          await supabase
+            .from('user_profiles')
+            .update({ stripe_payment_method_id: paymentMethodId })
+            .eq('stripe_customer_id', customerId)
+
+          console.log(`Updated payment method for customer ${customerId}`)
+        }
+
+        break
+      }
+
       default:
         console.log(`Unhandled event type: ${event.type}`)
     }
@@ -143,7 +189,7 @@ serve(async (req) => {
   } catch (err) {
     console.error(`Webhook error: ${(err as Error).message}`)
     return new Response(
-      JSON.stringify({ error: (err as Error).message }),
+      JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
