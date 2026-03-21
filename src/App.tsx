@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { PublicLayout } from './components/layouts/PublicLayout';
 import { DashboardLayout } from './components/layouts/DashboardLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -23,6 +24,7 @@ import { Billing } from './pages/Billing';
 
 function App() {
   return (
+    <ErrorBoundary>
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
@@ -72,6 +74,7 @@ function App() {
       </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 
