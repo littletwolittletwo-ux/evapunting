@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, Mail } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext'; // Assuming you have a theme context
 
 export function Signup() {
   const [email, setEmail] = useState('');
@@ -10,16 +9,15 @@ export function Signup() {
   const [fullName, setFullName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const { signUp, user, profile } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user && profile) {
+    if (user && user.email_confirmed_at && profile) {
       navigate(profile.is_admin ? '/admin' : '/dashboard', { replace: true });
     }
   }, [user, profile, navigate]);
-
-  const { theme } = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,13 +26,39 @@ export function Signup() {
 
     try {
       await signUp(email, password, fullName);
-      navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Failed to create account');
+      setEmailSent(true);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to create account';
+      setError(message);
     } finally {
       setLoading(false);
     }
   };
+
+  if (emailSent) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow-xl rounded-xl sm:px-10 border border-gray-200 dark:border-gray-700 text-center">
+            <div className="mx-auto w-14 h-14 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
+              <Mail className="h-7 w-7 text-green-600 dark:text-green-400" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Check your email</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              We've sent a confirmation link to <span className="font-medium text-gray-900 dark:text-gray-100">{email}</span>.
+              Click the link to verify your account before signing in.
+            </p>
+            <Link
+              to="/login"
+              className="inline-block px-6 py-3 rounded-lg font-medium text-sm text-white bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 transition-all shadow-md"
+            >
+              Go to Sign In
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

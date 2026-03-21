@@ -88,12 +88,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
     });
 
     if (error) throw error;
 
     if (data.user) {
-      const { error: profileError } = await supabase
+      await supabase
         .from('user_profiles')
         .insert({
           id: data.user.id,
@@ -101,9 +104,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           full_name: fullName,
           subscription_status: 'trial',
         });
-
-      if (profileError) {
-      }
     }
   }
 

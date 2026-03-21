@@ -21,6 +21,10 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
     return <Navigate to="/login" replace />;
   }
 
+  if (!user.email_confirmed_at) {
+    return <Navigate to="/login" replace />;
+  }
+
   if (requireAdmin && !profile?.is_admin) {
     return <Navigate to="/dashboard" replace />;
   }
