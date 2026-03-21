@@ -229,7 +229,6 @@ function UsersTab() {
         .range(from, to);
 
       if (profilesError) {
-        console.error('Error loading profiles:', profilesError);
         setLoading(false);
         return;
       }
@@ -263,7 +262,6 @@ function UsersTab() {
 
       setUsers(usersWithAccounts);
     } catch (error) {
-      console.error('Error loading users:', error);
     } finally {
       setLoading(false);
     }
@@ -289,7 +287,6 @@ function UsersTab() {
       }
       await loadUsers();
     } catch (error) {
-      console.error('Error updating status:', error);
     }
   }
 
@@ -302,7 +299,6 @@ function UsersTab() {
       if (error) throw error;
       await loadUsers();
     } catch (error) {
-      console.error('Error syncing user:', error);
     } finally {
       setSyncingUserId(null);
     }
@@ -325,7 +321,6 @@ function UsersTab() {
         setSelectedUser({ ...selectedUser, kyc_verified: !currentValue });
       }
     } catch (error) {
-      console.error('Error toggling KYC:', error);
     } finally {
       setTogglingKycId(null);
     }
@@ -690,7 +685,6 @@ function BillingTab() {
         .range(from, to);
 
       if (error) {
-        console.error('Error loading billing cycles:', error);
         setLoading(false);
         return;
       }
@@ -713,7 +707,6 @@ function BillingTab() {
         setEmailMap(map);
       }
     } catch (error) {
-      console.error('Error loading billing:', error);
     } finally {
       setLoading(false);
     }
@@ -739,8 +732,7 @@ function BillingTab() {
       if (debtError) throw debtError;
 
       await loadBilling();
-    } catch (error) {
-      console.error('Error marking as paid:', error);
+    } catch {
     } finally {
       setActionLoading(null);
     }
@@ -762,8 +754,7 @@ function BillingTab() {
       if (debtError) throw debtError;
 
       await loadBilling();
-    } catch (error) {
-      console.error('Error waiving cycle:', error);
+    } catch {
     } finally {
       setActionLoading(null);
     }
@@ -929,8 +920,7 @@ function ApiConfigTab() {
         if (row.key === 'betting_api_url') setApiUrl(row.value || '');
         if (row.key === 'betting_api_key') setApiKey(row.value || '');
       });
-    } catch (error) {
-      console.error('Error loading settings:', error);
+    } catch {
     } finally {
       setLoading(false);
     }
@@ -1159,8 +1149,7 @@ function BalancesTab() {
         });
         setEmailMap(map);
       }
-    } catch (error) {
-      console.error('Error loading balances:', error);
+    } catch {
     } finally {
       setLoading(false);
     }

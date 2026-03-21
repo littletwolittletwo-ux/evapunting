@@ -64,9 +64,7 @@ export function useTokenDebt(): UseTokenDebtReturn {
           .eq('id', user!.id)
           .maybeSingle();
 
-        if (profileError) {
-          console.error('Error fetching profile for token debt:', profileError);
-        } else if (profileData) {
+        if (!profileError && profileData) {
           setTokenDebt(profileData.token_debt ?? 0);
           setTokenBalance(profileData.token_balance ?? 0);
         }
@@ -82,9 +80,7 @@ export function useTokenDebt(): UseTokenDebtReturn {
           .gte('week_end', todayStr)
           .maybeSingle();
 
-        if (cycleError) {
-          console.error('Error fetching current billing cycle:', cycleError);
-        } else {
+        if (!cycleError) {
           setCurrentCycle(cycleData ?? null);
         }
 
@@ -97,13 +93,10 @@ export function useTokenDebt(): UseTokenDebtReturn {
           .or(`status.eq.failed,and(status.eq.pending,week_end.lt.${todayStr})`)
           .limit(1);
 
-        if (overdueError) {
-          console.error('Error checking overdue cycles:', overdueError);
-        } else {
+        if (!overdueError) {
           setIsOverdue((overdueCycles?.length ?? 0) > 0);
         }
-      } catch (error) {
-        console.error('Error in useTokenDebt:', error);
+      } catch {
       } finally {
         setLoading(false);
       }

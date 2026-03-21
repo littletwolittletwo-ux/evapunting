@@ -41,7 +41,6 @@ export async function fetchAnalyticsData(userId: string): Promise<AnalyticsData>
       .eq('status', 'connected');
 
     if (connectionsError) {
-      console.error('Error fetching bookmaker connections:', connectionsError);
       return defaults;
     }
 
@@ -53,7 +52,6 @@ export async function fetchAnalyticsData(userId: string): Promise<AnalyticsData>
       .order('month', { ascending: true });
 
     if (performanceError) {
-      console.error('Error fetching betting performance:', performanceError);
     }
 
     // 3. Query bets for bet counts per bookmaker_connection_id
@@ -63,7 +61,6 @@ export async function fetchAnalyticsData(userId: string): Promise<AnalyticsData>
       .eq('user_id', userId);
 
     if (betsError) {
-      console.error('Error fetching bets:', betsError);
     }
 
     // Count bets per bookmaker_connection_id
@@ -126,7 +123,6 @@ export async function fetchAnalyticsData(userId: string): Promise<AnalyticsData>
       history,
     };
   } catch (error) {
-    console.error('Error fetching analytics data:', error);
     return defaults;
   }
 }

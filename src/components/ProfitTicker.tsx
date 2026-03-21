@@ -36,7 +36,6 @@ export function ProfitTicker() {
       const total = BASE_PROFIT + dbTotal;
       setDisplayProfit(total);
     } catch (error) {
-      console.error('Error fetching total profit:', error);
     }
   }
 

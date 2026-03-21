@@ -47,7 +47,6 @@ export function ConnectAccounts() {
 
       setConnectedAccounts(data || []);
     } catch (error) {
-      console.error('Error loading accounts:', error);
     }
   }
 
@@ -119,7 +118,6 @@ export function ConnectAccounts() {
       setShowModal(false);
     } catch (err: any) {
       setError(err.message || 'Failed to connect account. Please try again.');
-      console.error(err);
     } finally {
       setLoading(false);
     }

@@ -34,7 +34,6 @@ export function BalanceTicker() {
           .eq('status', 'connected');
 
         if (error) {
-          console.error('Error fetching bookmaker balances:', error);
           return;
         }
 
@@ -51,7 +50,6 @@ export function BalanceTicker() {
           setBalances(mapped);
         }
       } catch (error) {
-        console.error('Error in BalanceTicker:', error);
       } finally {
         setLoading(false);
       }

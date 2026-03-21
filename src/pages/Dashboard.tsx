@@ -63,7 +63,6 @@ export function Dashboard() {
         .eq('user_id', user.id);
 
       if (performanceError && performanceError.code !== 'PGRST116') {
-        console.error('Performance error:', performanceError);
       }
 
       const totalProfitValue = performance?.reduce((sum, p) => sum + Number(p.total_profit), 0) || 0;
@@ -113,7 +112,6 @@ export function Dashboard() {
         }
       }
     } catch (error) {
-      console.error('Error loading dashboard data:', error);
     } finally {
       setLoading(false);
     }

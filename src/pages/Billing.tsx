@@ -109,7 +109,6 @@ export function Billing() {
       if (error) throw error;
       setBillingCycles(data || []);
     } catch (error) {
-      console.error('Error loading billing data:', error);
     } finally {
       setLoading(false);
     }

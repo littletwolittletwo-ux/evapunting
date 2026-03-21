@@ -95,7 +95,6 @@ export function WeeklyBillingSummaryModal() {
           .maybeSingle();
 
         if (error) {
-          console.error('Error fetching weekly summary:', error);
           setLoading(false);
           return;
         }
@@ -113,7 +112,6 @@ export function WeeklyBillingSummaryModal() {
           setVisible(true);
         }
       } catch (err) {
-        console.error('Error in WeeklyBillingSummaryModal:', err);
       } finally {
         setLoading(false);
       }

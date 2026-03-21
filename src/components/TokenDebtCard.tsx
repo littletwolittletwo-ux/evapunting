@@ -66,7 +66,6 @@ export function TokenDebtCard() {
       }
     } catch (err) {
       setPayError('An unexpected error occurred. Please try again.');
-      console.error('Error paying token debt:', err);
     } finally {
       setPaying(false);
     }

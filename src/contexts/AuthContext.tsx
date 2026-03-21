@@ -75,12 +75,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error loading profile:', error);
       }
 
       setProfile(data);
     } catch (error) {
-      console.error('Error loading profile:', error);
     } finally {
       setLoading(false);
     }
@@ -105,7 +103,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
 
       if (profileError) {
-        console.error('Error creating profile:', profileError);
       }
     }
   }
@@ -126,7 +123,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .maybeSingle();
 
       if (profileError && profileError.code !== 'PGRST116') {
-        console.error('Error loading profile:', profileError);
       }
 
       return profileData;
