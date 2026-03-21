@@ -34,6 +34,7 @@ export interface Database {
           stripe_payment_method_id: string | null;
           external_user_id: string | null;
           kyc_verified: boolean;
+          kyc_document_url: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -51,6 +52,7 @@ export interface Database {
           stripe_payment_method_id?: string | null;
           external_user_id?: string | null;
           kyc_verified?: boolean;
+          kyc_document_url?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -68,6 +70,7 @@ export interface Database {
           stripe_payment_method_id?: string | null;
           external_user_id?: string | null;
           kyc_verified?: boolean;
+          kyc_document_url?: string | null;
           created_at?: string;
           updated_at?: string;
         };

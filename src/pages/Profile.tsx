@@ -2,7 +2,145 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { CheckCircle2, Clock, CreditCard, Pause, Trash2 } from 'lucide-react';
+import { CheckCircle2, Clock, CreditCard, Pause, Trash2, Upload, Loader2, FileText } from 'lucide-react';
+
+function KycSection() {
+  const { user, profile } = useAuth();
+  const [uploading, setUploading] = useState(false);
+  const [kycError, setKycError] = useState('');
+  const [kycSuccess, setKycSuccess] = useState('');
+
+  async function handleUpload(file: File) {
+    if (!user) return;
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+      setKycError('Please upload a JPG, PNG, WebP, or PDF file.');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setKycError('File must be under 10MB.');
+      return;
+    }
+
+    setUploading(true);
+    setKycError('');
+    setKycSuccess('');
+
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `${user.id}/kyc_${Date.now()}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('kyc-documents')
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('kyc-documents')
+        .getPublicUrl(fileName);
+
+      const { error: updateError } = await supabase
+        .from('user_profiles')
+        .update({ kyc_document_url: publicUrl })
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+
+      setKycSuccess('Document uploaded successfully. Our team will review it shortly.');
+    } catch {
+      setKycError('Failed to upload document. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  if (profile?.kyc_verified) {
+    return (
+      <div className="mt-6 p-4 rounded-lg border border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/10">
+        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Identity Verification</h3>
+        <div className="flex items-center space-x-2 text-green-600 dark:text-green-400">
+          <CheckCircle2 className="h-5 w-5" />
+          <span className="font-medium">Identity Verified</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (profile?.kyc_document_url) {
+    return (
+      <div className="mt-6 p-4 rounded-lg border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10">
+        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Identity Verification</h3>
+        <div className="flex items-center space-x-2 text-amber-600 dark:text-amber-400 mb-2">
+          <Clock className="h-5 w-5" />
+          <span className="font-medium">Document Submitted — Pending Review</span>
+        </div>
+        <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+          <FileText className="h-4 w-4" />
+          <span>Your ID document has been uploaded. We'll verify it within 1-2 business days.</span>
+        </div>
+        {kycError && (
+          <div className="mt-3 text-sm text-red-600 dark:text-red-400">{kycError}</div>
+        )}
+        {kycSuccess && (
+          <div className="mt-3 text-sm text-green-600 dark:text-green-400">{kycSuccess}</div>
+        )}
+        <div className="mt-3">
+          <label className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all cursor-pointer">
+            {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+            Re-upload Document
+            <input
+              type="file"
+              accept="image/*,.pdf"
+              className="hidden"
+              disabled={uploading}
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) handleUpload(f);
+              }}
+            />
+          </label>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-6 p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Identity Verification</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+        Upload a government-issued photo ID (driver's licence or passport) to verify your identity.
+      </p>
+      {kycError && (
+        <div className="mb-3 text-sm text-red-600 dark:text-red-400">{kycError}</div>
+      )}
+      {kycSuccess && (
+        <div className="mb-3 text-sm text-green-600 dark:text-green-400">{kycSuccess}</div>
+      )}
+      <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-white cursor-pointer relative overflow-hidden group transition-all">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-green-600 transition-transform group-hover:scale-105"></div>
+        <span className="relative flex items-center gap-2">
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+          Upload ID Document
+        </span>
+        <input
+          type="file"
+          accept="image/*,.pdf"
+          className="hidden"
+          disabled={uploading}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) handleUpload(f);
+          }}
+        />
+      </label>
+      <p className="mt-2 text-xs text-gray-500 dark:text-gray-500">
+        Accepted: JPG, PNG, WebP, PDF. Max 10MB.
+      </p>
+    </div>
+  );
+}
 
 export function Profile() {
   const { user, profile, signOut } = useAuth();
@@ -166,20 +304,7 @@ export function Profile() {
             </div>
           </form>
 
-          <div className="mt-6 p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Identity Verification</h3>
-            {profile?.kyc_verified ? (
-              <div className="flex items-center space-x-2 text-green-600 dark:text-green-400">
-                <CheckCircle2 className="h-5 w-5" />
-                <span className="font-medium">Identity Verified</span>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
-                <Clock className="h-5 w-5" />
-                <span>Pending Verification</span>
-              </div>
-            )}
-          </div>
+          <KycSection />
 
           <div className="mt-6 p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
             <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Method</h3>

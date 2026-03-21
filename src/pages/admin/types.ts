@@ -24,6 +24,7 @@ export interface UserWithAccounts {
   created_at: string;
   token_debt: number | null;
   kyc_verified: boolean;
+  kyc_document_url: string | null;
   accounts: BookmakerConnection[];
 }
 

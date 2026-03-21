@@ -71,6 +71,7 @@ export function UsersTab() {
           created_at: profile.created_at,
           token_debt: profile.token_debt ?? null,
           kyc_verified: profile.kyc_verified ?? false,
+          kyc_document_url: profile.kyc_document_url ?? null,
           accounts: userConnections,
         };
       });
@@ -373,6 +374,21 @@ export function UsersTab() {
                   />
                 </button>
               </div>
+              {selectedUser.kyc_document_url && (
+                <div className="mt-2">
+                  <a
+                    href={selectedUser.kyc_document_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    View KYC Document
+                  </a>
+                </div>
+              )}
+              {!selectedUser.kyc_document_url && !selectedUser.kyc_verified && (
+                <p className="mt-2 text-xs text-gray-500 dark:text-gray-500">No KYC document uploaded yet.</p>
+              )}
             </div>
 
             <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-3">
