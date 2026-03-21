@@ -936,23 +936,53 @@ function ApiConfigTab() {
     }
   }
 
+  function validateUrl(url: string): string | null {
+    if (!url.trim()) return 'API Base URL is required.';
+    try {
+      const parsed = new URL(url);
+      if (!['http:', 'https:'].includes(parsed.protocol)) return 'URL must start with http:// or https://';
+    } catch {
+      return 'Please enter a valid URL (e.g. https://api.example.com).';
+    }
+    return null;
+  }
+
+  function validateApiKey(key: string): string | null {
+    if (!key.trim()) return 'API Key is required.';
+    if (key.trim().length < 8) return 'API Key seems too short (minimum 8 characters).';
+    return null;
+  }
+
   async function saveSettings() {
     setSaving(true);
     setMessage(null);
+
+    const urlErr = validateUrl(apiUrl);
+    if (urlErr) {
+      setMessage({ type: 'error', text: urlErr });
+      setSaving(false);
+      return;
+    }
+    const keyErr = validateApiKey(apiKey);
+    if (keyErr) {
+      setMessage({ type: 'error', text: keyErr });
+      setSaving(false);
+      return;
+    }
+
     try {
       const { error: urlError } = await supabase
         .from('admin_settings')
-        .upsert({ key: 'betting_api_url', value: apiUrl }, { onConflict: 'key' });
+        .upsert({ key: 'betting_api_url', value: apiUrl.trim() }, { onConflict: 'key' });
       if (urlError) throw urlError;
 
       const { error: keyError } = await supabase
         .from('admin_settings')
-        .upsert({ key: 'betting_api_key', value: apiKey }, { onConflict: 'key' });
+        .upsert({ key: 'betting_api_key', value: apiKey.trim() }, { onConflict: 'key' });
       if (keyError) throw keyError;
 
       setMessage({ type: 'success', text: 'Settings saved successfully.' });
-    } catch (error) {
-      console.error('Error saving settings:', error);
+    } catch {
       setMessage({ type: 'error', text: 'Failed to save settings.' });
     } finally {
       setSaving(false);
@@ -962,15 +992,23 @@ function ApiConfigTab() {
   async function testConnection() {
     setTesting(true);
     setMessage(null);
+
+    const urlErr = validateUrl(apiUrl);
+    if (urlErr) {
+      setMessage({ type: 'error', text: `Save a valid API URL before testing. ${urlErr}` });
+      setTesting(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase.functions.invoke('sync-user-balances', {
         body: { test: true },
       });
       if (error) throw error;
       setMessage({ type: 'success', text: `Connection test successful. ${data?.message || ''}` });
-    } catch (error: any) {
-      console.error('Connection test failed:', error);
-      setMessage({ type: 'error', text: `Connection test failed: ${error.message || 'Unknown error'}` });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : 'Unknown error';
+      setMessage({ type: 'error', text: `Connection test failed: ${msg}` });
     } finally {
       setTesting(false);
     }
@@ -983,9 +1021,9 @@ function ApiConfigTab() {
       const { data, error } = await supabase.functions.invoke('sync-user-balances');
       if (error) throw error;
       setMessage({ type: 'success', text: `Sync complete. ${data?.message || ''}` });
-    } catch (error: any) {
-      console.error('Sync all failed:', error);
-      setMessage({ type: 'error', text: `Sync failed: ${error.message || 'Unknown error'}` });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : 'Unknown error';
+      setMessage({ type: 'error', text: `Sync failed: ${msg}` });
     } finally {
       setSyncing(false);
     }
@@ -1022,12 +1060,14 @@ function ApiConfigTab() {
             API Key
           </label>
           <input
-            type="text"
+            type="password"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="Enter API key..."
+            autoComplete="off"
             className="bg-gray-100 dark:bg-gray-800/30 text-gray-900 dark:text-gray-100 placeholder-gray-600 dark:placeholder-gray-500 w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700/50 focus:outline-none focus:ring-2 focus:ring-green-600 dark:focus:ring-blue-600 focus:border-transparent transition-all"
           />
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-500">Minimum 8 characters. Stored securely in the database.</p>
         </div>
 
         {/* Action Buttons */}
