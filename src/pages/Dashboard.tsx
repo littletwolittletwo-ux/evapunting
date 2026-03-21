@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TrendingUp, DollarSign, Activity, AlertCircle, Target, BarChart3 } from 'lucide-react';
+import { TrendingUp, DollarSign, Activity, AlertCircle, Target, BarChart3, Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { BOOKMAKERS } from '../types';
@@ -119,11 +119,8 @@ export function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-white dark:bg-gray-900">
-        <div className="relative">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
-          <div className="absolute inset-0 rounded-full border-t-2 border-blue-600/20 dark:border-blue-400/20"></div>
-        </div>
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
       </div>
     );
   }

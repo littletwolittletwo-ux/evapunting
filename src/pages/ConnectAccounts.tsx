@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Link as LinkIcon, Upload } from 'lucide-react';
+import { CheckCircle2, Link as LinkIcon, Upload, Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { BOOKMAKERS } from '../types';
@@ -26,6 +26,7 @@ export function ConnectAccounts() {
     depositConfirmed: false,
   });
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -46,7 +47,9 @@ export function ConnectAccounts() {
       if (error) throw error;
 
       setConnectedAccounts(data || []);
-    } catch (error) {
+    } catch {
+    } finally {
+      setInitialLoading(false);
     }
   }
 
@@ -126,6 +129,14 @@ export function ConnectAccounts() {
 
   const getAccountStatus = (bookmakerName: string) =>
     connectedAccounts.find((acc) => acc.bookmaker_name === bookmakerName);
+
+  if (initialLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
