@@ -16,7 +16,8 @@ import {
 } from 'lucide-react';
 import type { BillingCycleStatus } from '../types/database';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripeKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = stripeKey ? loadStripe(stripeKey) : Promise.resolve(null);
 
 interface BillingCycle {
   id: string;
