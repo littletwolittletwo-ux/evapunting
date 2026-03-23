@@ -58,9 +58,9 @@ function KycSection() {
 
   if (profile?.kyc_verified) {
     return (
-      <div className="mt-6 p-4 rounded-lg border border-green-200 dark:border-green-500/30 bg-green-50 dark:bg-green-500/10">
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Identity Verification</h3>
-        <div className="flex items-center space-x-2 text-green-600 dark:text-green-400">
+      <div className="mt-6 p-4 rounded-lg border border-green-200 bg-green-50">
+        <h3 className="text-sm font-medium text-gray-700 mb-2">Identity Verification</h3>
+        <div className="flex items-center space-x-2 text-green-600">
           <CheckCircle2 className="h-5 w-5" />
           <span className="font-medium">Identity Verified</span>
         </div>
@@ -70,24 +70,24 @@ function KycSection() {
 
   if (profile?.kyc_document_url) {
     return (
-      <div className="mt-6 p-4 rounded-lg border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10">
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Identity Verification</h3>
-        <div className="flex items-center space-x-2 text-amber-600 dark:text-amber-400 mb-2">
+      <div className="mt-6 p-4 rounded-lg border border-amber-200 bg-amber-50">
+        <h3 className="text-sm font-medium text-gray-700 mb-2">Identity Verification</h3>
+        <div className="flex items-center space-x-2 text-amber-600 mb-2">
           <Clock className="h-5 w-5" />
           <span className="font-medium">Document Submitted — Pending Review</span>
         </div>
-        <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center space-x-2 text-sm text-gray-500">
           <FileText className="h-4 w-4" />
           <span>Your ID document has been uploaded. We'll verify it within 1-2 business days.</span>
         </div>
         {kycError && (
-          <div className="mt-3 text-sm text-red-600 dark:text-red-400">{kycError}</div>
+          <div className="mt-3 text-sm text-red-600">{kycError}</div>
         )}
         {kycSuccess && (
-          <div className="mt-3 text-sm text-green-600 dark:text-green-400">{kycSuccess}</div>
+          <div className="mt-3 text-sm text-green-600">{kycSuccess}</div>
         )}
         <div className="mt-3">
-          <label className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all cursor-pointer">
+          <label className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
             {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
             Re-upload Document
             <input
@@ -107,20 +107,19 @@ function KycSection() {
   }
 
   return (
-    <div className="mt-6 p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Identity Verification</h3>
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+    <div className="mt-6 p-4 rounded-lg border border-gray-200 bg-gray-50">
+      <h3 className="text-sm font-medium text-gray-700 mb-2">Identity Verification</h3>
+      <p className="text-sm text-gray-500 mb-3">
         Upload a government-issued photo ID (driver's licence or passport) to verify your identity.
       </p>
       {kycError && (
-        <div className="mb-3 text-sm text-red-600 dark:text-red-400">{kycError}</div>
+        <div className="mb-3 text-sm text-red-600">{kycError}</div>
       )}
       {kycSuccess && (
-        <div className="mb-3 text-sm text-green-600 dark:text-green-400">{kycSuccess}</div>
+        <div className="mb-3 text-sm text-green-600">{kycSuccess}</div>
       )}
-      <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-white cursor-pointer relative overflow-hidden group transition-all">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-green-600 transition-transform group-hover:scale-105"></div>
-        <span className="relative flex items-center gap-2">
+      <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-white cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors">
+        <span className="flex items-center gap-2">
           {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
           Upload ID Document
         </span>
@@ -135,7 +134,7 @@ function KycSection() {
           }}
         />
       </label>
-      <p className="mt-2 text-xs text-gray-500 dark:text-gray-500">
+      <p className="mt-2 text-xs text-gray-500">
         Accepted: JPG, PNG, WebP, PDF. Max 10MB.
       </p>
     </div>
@@ -219,76 +218,70 @@ export function Profile() {
   }
 
   return (
-    <div className="p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="p-8 bg-[#F8FAFC] min-h-screen">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent dark:text-white mb-8">Profile Settings</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Profile Settings</h1>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
           <form onSubmit={handleSubmit} className="space-y-6">
             {success && (
-              <div className="bg-green-500/10 border border-green-600/30 text-green-600 dark:text-green-400 px-4 py-3 rounded-lg text-sm backdrop-blur-xl">
+              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg text-sm">
                 Profile updated successfully!
               </div>
             )}
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm backdrop-blur-xl">
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
               <input
                 type="email"
                 value={user?.email || ''}
                 disabled
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg
-                  bg-white dark:bg-gray-800
-                  text-gray-900 dark:text-gray-100
-                  cursor-not-allowed backdrop-blur-xl"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg
+                  bg-gray-50 text-gray-900 cursor-not-allowed"
               />
-              <p className="mt-2 text-xs text-gray-600 dark:text-gray-500">Email cannot be changed</p>
+              <p className="mt-2 text-xs text-gray-500">Email cannot be changed</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg
-                  bg-white dark:bg-gray-800
-                  text-gray-900 dark:text-gray-100
-                  focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-green-500
-                  focus:border-transparent backdrop-blur-xl transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg
+                  bg-white text-gray-900
+                  focus:outline-none focus:ring-2 focus:ring-blue-600
+                  focus:border-transparent transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
               <input
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg
-                  bg-white dark:bg-gray-800
-                  text-gray-900 dark:text-gray-100
-                  focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-green-500
-                  focus:border-transparent backdrop-blur-xl transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg
+                  bg-white text-gray-900
+                  focus:outline-none focus:ring-2 focus:ring-blue-600
+                  focus:border-transparent transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Account Created</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Account Created</label>
               <input
                 type="text"
                 value={profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : ''}
                 disabled
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg
-                  bg-white dark:bg-gray-800
-                  text-gray-900 dark:text-gray-100
-                  cursor-not-allowed backdrop-blur-xl"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg
+                  bg-gray-50 text-gray-900 cursor-not-allowed"
               />
             </div>
 
@@ -296,66 +289,65 @@ export function Profile() {
               <button
                 type="submit"
                 disabled={loading}
-                className="relative w-full px-4 py-3 rounded-lg font-medium text-white overflow-hidden group disabled:opacity-50 transition-all"
+                className="w-full px-4 py-3 rounded-lg font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-green-600 transition-transform group-hover:scale-105"></div>
-                <span className="relative">{loading ? 'Saving...' : 'Save Changes'}</span>
+                {loading ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </form>
 
           <KycSection />
 
-          <div className="mt-6 p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Method</h3>
+          <div className="mt-6 p-4 rounded-lg border border-gray-200 bg-gray-50">
+            <h3 className="text-sm font-medium text-gray-700 mb-2">Payment Method</h3>
             {profile?.stripe_payment_method_id ? (
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
+                <div className="flex items-center space-x-2 text-gray-700">
                   <CreditCard className="h-5 w-5" />
                   <span>Card ending in ****{profile.stripe_payment_method_id.slice(-4)}</span>
                 </div>
-                <Link to="/billing" className="text-blue-600 dark:text-blue-400 text-sm hover:underline">
+                <Link to="/billing" className="text-blue-600 text-sm hover:underline">
                   Update Card
                 </Link>
               </div>
             ) : (
               <div className="flex items-center justify-between">
-                <span className="text-gray-500 dark:text-gray-400 text-sm">No payment method on file</span>
-                <Link to="/billing" className="text-blue-600 dark:text-blue-400 text-sm hover:underline">
+                <span className="text-gray-500 text-sm">No payment method on file</span>
+                <Link to="/billing" className="text-blue-600 text-sm hover:underline">
                   Add Card
                 </Link>
               </div>
             )}
           </div>
 
-          <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Account Controls</h3>
+          <div className="mt-8 border-t border-gray-200 pt-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Controls</h3>
 
             {profile?.subscription_status !== 'paused' && profile?.subscription_status !== 'cancelled' && (
-              <div className="flex items-center justify-between p-4 rounded-lg border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 mb-4">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-amber-200 bg-amber-50 mb-4">
                 <div>
-                  <p className="font-medium text-amber-700 dark:text-amber-400">Pause Betting</p>
-                  <p className="text-sm text-amber-600 dark:text-amber-300/70">Temporarily stop all automated betting</p>
+                  <p className="font-medium text-amber-800">Pause Betting</p>
+                  <p className="text-sm text-amber-700">Temporarily stop all automated betting</p>
                 </div>
-                <button onClick={() => setShowPauseModal(true)} className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors text-sm font-medium">
+                <button onClick={() => setShowPauseModal(true)} className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm font-medium">
                   <Pause className="h-4 w-4 inline mr-1" /> Pause
                 </button>
               </div>
             )}
 
             {profile?.subscription_status === 'paused' && (
-              <div className="p-4 rounded-lg border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 mb-4">
-                <p className="font-medium text-amber-700 dark:text-amber-400">Account is paused</p>
-                <p className="text-sm text-amber-600 dark:text-amber-300/70 mb-2">Your automated betting is currently paused.</p>
+              <div className="p-4 rounded-lg border border-amber-200 bg-amber-50 mb-4">
+                <p className="font-medium text-amber-800">Account is paused</p>
+                <p className="text-sm text-amber-700 mb-2">Your automated betting is currently paused.</p>
               </div>
             )}
           </div>
 
-          <div className="mt-4 p-4 rounded-lg border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10">
+          <div className="mt-4 p-4 rounded-lg border border-red-200 bg-red-50">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-red-700 dark:text-red-400">Delete Account</p>
-                <p className="text-sm text-red-600 dark:text-red-300/70">Permanently cancel your EVA subscription</p>
+                <p className="font-medium text-red-700">Delete Account</p>
+                <p className="text-sm text-red-600">Permanently cancel your EVA subscription</p>
               </div>
               <button onClick={() => setShowDeleteModal(true)} className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium">
                 <Trash2 className="h-4 w-4 inline mr-1" /> Delete
@@ -366,22 +358,22 @@ export function Profile() {
       </div>
 
       {showPauseModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-w-md w-full mx-4 border border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Pause Betting?</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full mx-4 border border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Pause Betting?</h3>
+            <p className="text-sm text-gray-500 mb-6">
               This will temporarily stop all automated betting on your account. You can resume at any time from your profile or billing page.
             </p>
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowPauseModal(false)}
-                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
+                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={handlePause}
-                className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors text-sm font-medium"
+                className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm font-medium"
               >
                 Confirm Pause
               </button>
@@ -391,16 +383,16 @@ export function Profile() {
       )}
 
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-w-md w-full mx-4 border border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Delete Account?</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full mx-4 border border-gray-200">
+            <h3 className="text-lg font-semibold text-red-600 mb-2">Delete Account?</h3>
+            <p className="text-sm text-gray-500 mb-6">
               This will permanently cancel your EVA subscription and sign you out. This action cannot be undone.
             </p>
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
+                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium"
               >
                 Cancel
               </button>

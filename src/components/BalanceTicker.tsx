@@ -73,7 +73,7 @@ export function BalanceTicker() {
   const renderItems = [...tickerItems, ...tickerItems];
 
   return (
-    <div className="w-full overflow-hidden bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+    <div className="w-full overflow-hidden bg-white border-b border-gray-200">
       <style>{`
         @keyframes balanceTickerScroll {
           0% {
@@ -90,13 +90,13 @@ export function BalanceTicker() {
           animation-play-state: paused;
         }
       `}</style>
-      <div className="balance-ticker-track flex whitespace-nowrap py-2 px-4">
+      <div className="balance-ticker-track flex whitespace-nowrap py-2.5 px-4">
         {renderItems.map((item, index) => (
           <span key={index} className="inline-flex items-center mx-6 text-sm">
-            <span className="font-medium text-gray-700 dark:text-gray-300">
+            <span className="font-medium text-gray-500">
               {item.label}:
             </span>
-            <span className="ml-1.5 text-gray-900 dark:text-gray-100 font-semibold">
+            <span className="ml-1.5 text-gray-900 font-semibold">
               {item.balance}
             </span>
             <span className="ml-1.5">
@@ -104,8 +104,8 @@ export function BalanceTicker() {
               <span
                 className={
                   item.profit >= 0
-                    ? 'text-green-500 dark:text-green-400'
-                    : 'text-red-500 dark:text-red-400'
+                    ? 'text-green-600 font-medium'
+                    : 'text-red-600 font-medium'
                 }
               >
                 {item.profitStr}
@@ -113,7 +113,7 @@ export function BalanceTicker() {
               )
             </span>
             {index < renderItems.length - 1 && (
-              <span className="ml-6 text-gray-400 dark:text-gray-600">|</span>
+              <span className="ml-6 text-gray-300">|</span>
             )}
           </span>
         ))}

@@ -162,26 +162,26 @@ export function MilestoneBadge() {
         {toasts.map((toast) => (
           <div
             key={toast.key}
-            className="milestone-toast-enter pointer-events-auto min-w-[280px] bg-white dark:bg-gray-800
-              border border-amber-400 dark:border-amber-500
-              rounded-xl shadow-2xl p-4 flex items-center gap-3"
+            className="milestone-toast-enter pointer-events-auto min-w-[280px] bg-white
+              border border-amber-300
+              rounded-xl shadow-lg p-4 flex items-center gap-3"
             role="alert"
           >
-            {/* Gold accent bar */}
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center text-lg shadow-md">
+            {/* Gold accent circle */}
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-lg">
               {toast.emoji}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wide">
+              <p className="text-xs font-medium text-amber-600 uppercase tracking-wide">
                 Milestone Achieved
               </p>
-              <p className="text-sm font-bold text-gray-900 dark:text-gray-100 mt-0.5">
+              <p className="text-sm font-bold text-gray-900 mt-0.5">
                 {toast.label} {toast.emoji}
               </p>
             </div>
             <button
               onClick={() => dismissToast(toast.key)}
-              className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
               aria-label="Dismiss"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

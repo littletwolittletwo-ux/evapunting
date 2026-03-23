@@ -23,27 +23,27 @@ export function TokenDebtCard() {
   const getStatusBadge = () => {
     if (isOverdue) {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600">
           Overdue
         </span>
       );
     }
     if (currentCycle?.status === 'paid' || currentCycle?.status === 'waived') {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-600">
           Paid
         </span>
       );
     }
     if (tokenDebt > 0) {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-600">
           Due
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-600">
         Paid
       </span>
     );
@@ -73,10 +73,10 @@ export function TokenDebtCard() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 animate-pulse">
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-4" />
-        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-2" />
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3" />
+      <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 animate-pulse">
+        <div className="h-4 bg-gray-100 rounded w-1/3 mb-4" />
+        <div className="h-8 bg-gray-100 rounded w-1/2 mb-2" />
+        <div className="h-4 bg-gray-100 rounded w-2/3" />
       </div>
     );
   }
@@ -86,14 +86,26 @@ export function TokenDebtCard() {
   const debtAUD = currentCycle?.amount_aud ?? 0;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+    <div className={`bg-white rounded-xl shadow-sm p-6 border hover:shadow-md transition-shadow ${
+      tokenDebt > 0 ? 'border-amber-300 animate-pulse-subtle' : 'border-gray-200'
+    }`}>
+      <style>{`
+        @keyframes pulse-subtle {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+          50% { box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.1); }
+        }
+        .animate-pulse-subtle {
+          animation: pulse-subtle 2s ease-in-out infinite;
+        }
+      `}</style>
+
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-            <Coins className="w-5 h-5 text-amber-500" />
+          <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
+            <Coins className="w-5 h-5 text-amber-600" />
           </div>
-          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+          <h3 className="text-sm font-medium text-gray-500">
             Token Debt
           </h3>
         </div>
@@ -105,19 +117,19 @@ export function TokenDebtCard() {
         <p
           className={`text-2xl font-bold ${
             tokenDebt > 0
-              ? 'text-amber-500 dark:text-amber-400'
-              : 'text-green-600 dark:text-green-400'
+              ? 'text-amber-600'
+              : 'text-green-600'
           }`}
         >
           {Math.round(animatedDebt).toLocaleString()} tokens
         </p>
         {debtAUD > 0 && (
-          <p className="text-sm text-amber-500 dark:text-amber-400 mt-0.5">
+          <p className="text-sm text-amber-600 mt-0.5">
             {formatAUD(debtAUD)}
           </p>
         )}
         {tokenDebt === 0 && (
-          <p className="text-sm text-green-600 dark:text-green-400 mt-0.5">
+          <p className="text-sm text-green-600 mt-0.5">
             {formatAUD(0)}
           </p>
         )}
@@ -126,14 +138,14 @@ export function TokenDebtCard() {
       {/* Billing Info */}
       <div className="mb-4">
         {isOverdue ? (
-          <p className="text-sm font-medium text-red-500 dark:text-red-400 flex items-center gap-1">
+          <p className="text-sm font-medium text-red-600 flex items-center gap-1">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Payment overdue
           </p>
         ) : (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-gray-500">
             Next billing: {daysUntilBilling} day{daysUntilBilling !== 1 ? 's' : ''}
           </p>
         )}
@@ -145,10 +157,9 @@ export function TokenDebtCard() {
           onClick={handlePayNow}
           disabled={paying}
           className="w-full py-2.5 px-4 rounded-lg text-white font-medium text-sm
-            bg-gradient-to-r from-amber-500 to-orange-500
-            hover:from-amber-600 hover:to-orange-600
+            bg-amber-600 hover:bg-amber-700
             disabled:opacity-50 disabled:cursor-not-allowed
-            transition-all duration-200 shadow-md hover:shadow-lg"
+            transition-colors duration-200 shadow-sm hover:shadow-md"
         >
           {paying ? (
             <span className="flex items-center justify-center gap-2">
@@ -166,14 +177,14 @@ export function TokenDebtCard() {
 
       {/* Success Message */}
       {paySuccess && (
-        <div className="text-sm text-green-600 dark:text-green-400 font-medium text-center py-2">
+        <div className="text-sm text-green-600 font-medium text-center py-2">
           Payment successful!
         </div>
       )}
 
       {/* Error Message */}
       {payError && (
-        <p className="text-xs text-red-500 dark:text-red-400 mt-2 text-center">
+        <p className="text-xs text-red-600 mt-2 text-center">
           {payError}
         </p>
       )}

@@ -38,7 +38,7 @@ interface WeeklySummary {
 }
 
 const CONFETTI_COLORS = [
-  '#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6',
+  '#16A34A', '#2563EB', '#D97706', '#DC2626', '#8b5cf6',
   '#ec4899', '#06b6d4', '#84cc16',
 ];
 
@@ -200,11 +200,11 @@ export function WeeklyBillingSummaryModal() {
 
         {/* Modal */}
         <div
-          className="weekly-modal-enter relative z-10 w-full max-w-md mx-4 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+          className="weekly-modal-enter relative z-10 w-full max-w-md mx-4 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-green-600 px-6 py-5">
+          <div className="bg-blue-600 px-6 py-5">
             <h2 className="text-xl font-bold text-white">
               Weekly Summary
             </h2>
@@ -217,14 +217,14 @@ export function WeeklyBillingSummaryModal() {
           <div className="px-6 py-5 space-y-4">
             {/* Gross Profit */}
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500 dark:text-gray-400">
+              <span className="text-sm text-gray-500">
                 Gross Profit
               </span>
               <span
                 className={`text-lg font-bold ${
                   summary.grossProfit >= 0
-                    ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-500 dark:text-red-400'
+                    ? 'text-green-600'
+                    : 'text-red-600'
                 }`}
               >
                 {formatAUD(summary.grossProfit)}
@@ -233,27 +233,27 @@ export function WeeklyBillingSummaryModal() {
 
             {/* Token Debt Charged */}
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500 dark:text-gray-400">
+              <span className="text-sm text-gray-500">
                 Token Debt Charged
               </span>
-              <span className="text-lg font-bold text-amber-500 dark:text-amber-400">
+              <span className="text-lg font-bold text-amber-600">
                 {summary.tokenDebt.toLocaleString()} tokens
               </span>
             </div>
 
             {/* Divider */}
-            <div className="border-t border-gray-200 dark:border-gray-700" />
+            <div className="border-t border-gray-200" />
 
             {/* Net Profit */}
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-sm font-medium text-gray-900">
                 Your Net Profit
               </span>
               <span
                 className={`text-2xl font-bold ${
                   summary.netProfit >= 0
-                    ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-500 dark:text-red-400'
+                    ? 'text-green-600'
+                    : 'text-red-600'
                 }`}
               >
                 {formatAUD(summary.netProfit)}
@@ -261,7 +261,7 @@ export function WeeklyBillingSummaryModal() {
             </div>
 
             {showConfetti && (
-              <p className="text-center text-sm text-green-600 dark:text-green-400 font-medium">
+              <p className="text-center text-sm text-green-600 font-medium">
                 Great week! Keep it up!
               </p>
             )}
@@ -272,9 +272,8 @@ export function WeeklyBillingSummaryModal() {
             <button
               onClick={handleDismiss}
               className="w-full py-3 px-4 rounded-lg text-white font-medium text-sm
-                bg-gradient-to-r from-blue-600 to-green-600
-                hover:from-blue-700 hover:to-green-700
-                transition-all duration-200 shadow-md hover:shadow-lg"
+                bg-blue-600 hover:bg-blue-700
+                transition-colors duration-200 shadow-sm hover:shadow-md"
             >
               Got it
             </button>

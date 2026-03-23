@@ -94,38 +94,26 @@ export function WinToast() {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="win-toast-enter pointer-events-auto max-w-sm w-80 bg-white dark:bg-gray-800 border-l-4 border-green-500 rounded-lg shadow-xl p-4 flex items-start gap-3"
+            className="win-toast-enter pointer-events-auto max-w-sm w-96 bg-green-50 border-l-4 border-green-500 rounded-xl shadow-lg p-5 flex items-start gap-4"
             role="alert"
           >
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
-              <svg
-                className="w-5 h-5 text-green-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-xl">
+              {'\uD83C\uDF89'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-green-600 dark:text-green-400">
-                Won! {formatAUD(toast.profit)}
+              <p className="text-lg font-bold text-green-600">
+                {'\uD83C\uDF89'} Won! {formatAUD(toast.profit)}
               </p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 truncate">
+              <p className="text-sm text-gray-500 mt-1 truncate">
                 on {toast.eventName}
               </p>
             </div>
             <button
               onClick={() => dismissToast(toast.id)}
-              className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
               aria-label="Dismiss"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>

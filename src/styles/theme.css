@@ -1,34 +1,17 @@
-/* Dark Mode Transition Styles */
-body {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Smooth theme transitions for all elements */
-* {
+/* Smooth transitions for interactive elements */
+a,
+button,
+input,
+select,
+textarea {
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease,
-    fill 0.3s ease;
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* Optional: Disable dark mode transition for performance-sensitive elements */
+/* Disable transitions when needed */
 .no-transition {
   transition: none !important;
-}
-
-/* Optional: Scroll bar styling for dark mode */
-body.dark-mode {
-  scrollbar-color: #4a5568 #2d3748; /* Dark mode scrollbar colors */
-}
-
-/* Optional: Webkit scrollbar styling */
-body.dark-mode::-webkit-scrollbar {
-  width: 12px;
-  background-color: #2d3748;
-}
-
-body.dark-mode::-webkit-scrollbar-thumb {
-  background-color: #4a5568;
-  border-radius: 6px;
 }

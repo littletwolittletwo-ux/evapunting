@@ -133,18 +133,18 @@ export function ConnectAccounts() {
   if (initialLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+        <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
       </div>
     );
   }
 
   return (
-    <div className="p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="p-8 bg-[#F8FAFC] min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent dark:text-white mb-4">
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">
           Connect Your Accounts
         </h1>
-        <p className="text-gray-600 dark:text-gray-300 mb-8">
+        <p className="text-gray-500 mb-8">
           Connect your bookmaker accounts to start automated betting. We'll manually integrate your
           credentials into our system within 1-2 business days.
         </p>
@@ -158,51 +158,47 @@ export function ConnectAccounts() {
               <div
                 key={bookmaker.name}
                 className={`
-                  bg-white dark:bg-gray-800 border
+                  bg-white border rounded-xl shadow-sm p-6 transition-all
                   ${connected
-                    ? 'border-green-600/50 dark:border-green-500/50 hover:border-green-700/70 dark:hover:border-green-500/70'
-                    : 'border-gray-200 dark:border-gray-700/50 hover:border-gray-300 dark:hover:border-gray-600/50'
+                    ? 'border-l-4 border-l-green-600 border-t-gray-200 border-r-gray-200 border-b-gray-200'
+                    : 'border-gray-200 hover:border-gray-300'
                   }
-                  backdrop-blur-xl rounded-xl shadow-xl p-6 transition-all
                 `}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{bookmaker.label}</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Recommended: ${bookmaker.deposit}</p>
+                    <h3 className="text-xl font-semibold text-gray-900">{bookmaker.label}</h3>
+                    <p className="text-sm text-gray-500">Recommended: ${bookmaker.deposit}</p>
                   </div>
-                  {connected && <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />}
+                  {connected && <CheckCircle2 className="h-6 w-6 text-green-600" />}
                 </div>
 
                 {connected ? (
                   <div>
                     <div className="mb-3">
-                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Status</span>
+                      <span className="text-xs font-medium text-gray-500">Status</span>
                       <p
                         className={`text-sm font-semibold ${
                           account.status === 'connected'
-                            ? 'text-green-600 dark:text-green-400'
-                            : 'text-yellow-600 dark:text-yellow-400'
+                            ? 'text-green-600'
+                            : 'text-amber-600'
                         }`}
                       >
                         {account.status === 'connected' ? 'Active' : 'Pending'}
                       </p>
                     </div>
                     <div>
-                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Username</span>
-                      <p className="text-sm text-gray-900 dark:text-gray-100">{account.username}</p>
+                      <span className="text-xs font-medium text-gray-500">Username</span>
+                      <p className="text-sm text-gray-900">{account.username}</p>
                     </div>
                   </div>
                 ) : (
                   <button
                     onClick={() => openModal(bookmaker)}
-                    className="w-full relative px-4 py-3 rounded-lg font-medium text-white overflow-hidden group"
+                    className="w-full px-4 py-3 rounded-lg font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-green-600 transition-transform group-hover:scale-105"></div>
-                    <span className="relative flex items-center justify-center space-x-2">
-                      <LinkIcon className="h-4 w-4" />
-                      <span>Connect Account</span>
-                    </span>
+                    <LinkIcon className="h-4 w-4" />
+                    <span>Connect Account</span>
                   </button>
                 )}
               </div>
@@ -212,21 +208,21 @@ export function ConnectAccounts() {
       </div>
 
       {showModal && selectedBookmaker && (
-        <div className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/50 rounded-xl max-w-md w-full p-6 shadow-2xl my-8 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent dark:text-white mb-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white border border-gray-200 rounded-xl max-w-md w-full p-6 shadow-lg my-8 max-h-[90vh] overflow-y-auto">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               Connect {selectedBookmaker.label}
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
+                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
                   {error}
                 </div>
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email
                 </label>
                 <input
@@ -234,34 +230,32 @@ export function ConnectAccounts() {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700/50 rounded-lg
-                    bg-white dark:bg-gray-800
-                    text-gray-900 dark:text-gray-100
-                    focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-green-500
-                    focus:border-transparent backdrop-blur-xl"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg
+                    bg-white text-gray-900
+                    focus:outline-none focus:ring-2 focus:ring-blue-600
+                    focus:border-transparent"
                   placeholder="your@email.com"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Username
                 </label>
                 <input
                   type="text"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700/50 rounded-lg
-                    bg-white dark:bg-gray-800
-                    text-gray-900 dark:text-gray-100
-                    focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-green-500
-                    focus:border-transparent backdrop-blur-xl"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg
+                    bg-white text-gray-900
+                    focus:outline-none focus:ring-2 focus:ring-blue-600
+                    focus:border-transparent"
                   placeholder="Username (if applicable)"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Password
                 </label>
                 <input
@@ -269,21 +263,20 @@ export function ConnectAccounts() {
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700/50 rounded-lg
-                    bg-white dark:bg-gray-800
-                    text-gray-900 dark:text-gray-100
-                    focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-green-500
-                    focus:border-transparent backdrop-blur-xl"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg
+                    bg-white text-gray-900
+                    focus:outline-none focus:ring-2 focus:ring-blue-600
+                    focus:border-transparent"
                   placeholder="Account password"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Deposit Amount
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
                   <input
                     type="number"
                     min="0"
@@ -292,28 +285,24 @@ export function ConnectAccounts() {
                     placeholder={selectedBookmaker.deposit.toString()}
                     value={formData.depositAmount}
                     onChange={(e) => setFormData({ ...formData, depositAmount: e.target.value })}
-                    className="w-full pl-8 pr-4 py-3 border border-gray-300 dark:border-gray-700/50 rounded-lg
-                      bg-white dark:bg-gray-800
-                      text-gray-900 dark:text-gray-100
-                      focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-green-500
-                      focus:border-transparent backdrop-blur-xl"
+                    className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg
+                      bg-white text-gray-900
+                      focus:outline-none focus:ring-2 focus:ring-blue-600
+                      focus:border-transparent"
                   />
                 </div>
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-500">Recommended: ${selectedBookmaker.deposit}</p>
+                <p className="mt-1 text-xs text-gray-500">Recommended: ${selectedBookmaker.deposit}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Proof of Balance (Optional)
                 </label>
                 <label className="flex items-center justify-center px-4 py-3
-                  border border-gray-300 dark:border-gray-700/50
-                  rounded-lg cursor-pointer
-                  hover:bg-gray-100 dark:hover:bg-gray-800/50
-                  transition-colors
-                  bg-white dark:bg-gray-800">
-                  <Upload className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                  border border-gray-300 rounded-lg cursor-pointer
+                  hover:bg-gray-50 transition-colors bg-white">
+                  <Upload className="h-4 w-4 mr-2 text-gray-500" />
+                  <span className="text-sm text-gray-500">
                     {formData.screenshot ? formData.screenshot.name : 'Upload Screenshot'}
                   </span>
                   <input
@@ -325,18 +314,18 @@ export function ConnectAccounts() {
                     }
                   />
                 </label>
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-500">Upload a screenshot showing your account balance</p>
+                <p className="mt-1 text-xs text-gray-500">Upload a screenshot showing your account balance</p>
               </div>
 
-              <div className="flex items-start space-x-2 bg-gray-100 dark:bg-gray-800/30 rounded-lg p-3 border border-gray-200 dark:border-gray-700/30">
+              <div className="flex items-start space-x-2 bg-gray-50 rounded-lg p-3 border border-gray-200">
                 <input
                   type="checkbox"
                   id="confirm"
                   checked={formData.depositConfirmed}
                   onChange={(e) => setFormData({ ...formData, depositConfirmed: e.target.checked })}
-                  className="mt-1 accent-blue-600 dark:accent-green-500"
+                  className="mt-1 accent-blue-600"
                 />
-                <label htmlFor="confirm" className="text-sm text-gray-700 dark:text-gray-300">
+                <label htmlFor="confirm" className="text-sm text-gray-700">
                   I confirm I have created and funded this account with ${selectedBookmaker.deposit} (or
                   similar) and authorise EVA AI to use my account for automated wagering according to the
                   service terms. EVA AI does not hold my funds.
@@ -348,10 +337,8 @@ export function ConnectAccounts() {
                   type="button"
                   onClick={() => setShowModal(false)}
                   className="flex-1 px-4 py-3
-                    border border-gray-300 dark:border-gray-700/50
-                    rounded-lg
-                    text-gray-700 dark:text-gray-300
-                    hover:bg-gray-100 dark:hover:bg-gray-800/50
+                    border border-gray-300 rounded-lg
+                    text-gray-700 hover:bg-gray-50
                     font-medium transition-colors"
                 >
                   Cancel
@@ -359,10 +346,9 @@ export function ConnectAccounts() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 relative px-4 py-3 rounded-lg font-medium text-white overflow-hidden group disabled:opacity-50"
+                  className="flex-1 px-4 py-3 rounded-lg font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-green-600 transition-transform group-hover:scale-105"></div>
-                  <span className="relative">{loading ? 'Connecting...' : 'Connect'}</span>
+                  {loading ? 'Connecting...' : 'Connect'}
                 </button>
               </div>
             </form>

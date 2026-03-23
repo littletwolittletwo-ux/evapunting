@@ -37,20 +37,20 @@ export function Signup() {
 
   if (emailSent) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow-xl rounded-xl sm:px-10 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="mx-auto w-14 h-14 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
-              <Mail className="h-7 w-7 text-green-600 dark:text-green-400" />
+          <div className="bg-white py-8 px-4 shadow-sm rounded-xl sm:px-10 border border-gray-200 text-center">
+            <div className="mx-auto w-14 h-14 rounded-full bg-green-50 flex items-center justify-center mb-4">
+              <Mail className="h-7 w-7 text-green-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Check your email</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-              We've sent a confirmation link to <span className="font-medium text-gray-900 dark:text-gray-100">{email}</span>.
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Check your email</h2>
+            <p className="text-sm text-gray-500 mb-6">
+              We've sent a confirmation link to <span className="font-medium text-gray-900">{email}</span>.
               Click the link to verify your account before signing in.
             </p>
             <Link
               to="/login"
-              className="inline-block px-6 py-3 rounded-lg font-medium text-sm text-white bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 transition-all shadow-md"
+              className="inline-block px-6 py-3 rounded-lg font-medium text-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors"
             >
               Go to Sign In
             </Link>
@@ -61,29 +61,26 @@ export function Signup() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link to="/" className="flex justify-center items-center space-x-2 group">
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-blue-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition"></div>
-            <TrendingUp className="h-12 w-12 text-blue-600 dark:text-green-600 relative" />
-          </div>
-          <span className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">EVA AI</span>
+        <Link to="/" className="flex justify-center items-center space-x-2">
+          <TrendingUp className="h-10 w-10 text-blue-600" />
+          <span className="text-3xl font-bold text-blue-600">EVA AI</span>
         </Link>
-        <h2 className="mt-6 text-center text-3xl font-bold text-gray-900 dark:text-gray-300">Create your account</h2>
+        <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">Create your account</h2>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow-xl rounded-xl sm:px-10 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white py-8 px-4 shadow-sm rounded-xl sm:px-10 border border-gray-200">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label htmlFor="fullName" className="block text-sm font-medium text-gray-900">
                 Full name
               </label>
               <input
@@ -92,12 +89,12 @@ export function Signup() {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="mt-2 block w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm focus:outline-none focus:ring-2 focus:border-transparent focus:ring-blue-500 transition-all"
+                className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:border-transparent focus:ring-blue-500 transition-all"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-900">
                 Email address
               </label>
               <input
@@ -106,12 +103,12 @@ export function Signup() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-2 block w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm focus:outline-none focus:ring-2 focus:border-transparent focus:ring-blue-500 transition-all"
+                className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:border-transparent focus:ring-blue-500 transition-all"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-900">
                 Password
               </label>
               <input
@@ -121,23 +118,22 @@ export function Signup() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-2 block w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm focus:outline-none focus:ring-2 focus:border-transparent focus:ring-blue-500 transition-all"
+                className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:border-transparent focus:ring-blue-500 transition-all"
               />
-              <p className="mt-2 text-xs text-gray-600 dark:text-gray-500">Minimum 6 characters</p>
+              <p className="mt-2 text-xs text-gray-500">Minimum 6 characters</p>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="relative w-full py-3 px-4 rounded-lg text-sm font-medium text-white overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-blue-600 transition-transform group-hover:scale-105"></div>
-              <span className="relative">{loading ? 'Creating account...' : 'Sign up'}</span>
+              {loading ? 'Creating account...' : 'Sign up'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <Link to="/login" className="text-sm text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors">
+            <Link to="/login" className="text-sm text-blue-600 hover:text-blue-700 transition-colors">
               Already have an account? Sign in
             </Link>
           </div>
