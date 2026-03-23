@@ -24,16 +24,19 @@ import { Billing } from './pages/Billing';
 import { supabaseMisconfigured } from './lib/supabase';
 
 function ConfigError() {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="max-w-md w-full bg-white rounded-xl shadow-xl border border-gray-200 p-8 text-center">
         <h2 className="text-xl font-bold text-gray-900 mb-2">Configuration Error</h2>
         <p className="text-sm text-gray-600 mb-4">
-          Missing required environment variables. Please set{' '}
-          <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">VITE_SUPABASE_URL</code> and{' '}
-          <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">VITE_SUPABASE_ANON_KEY</code>{' '}
-          in your Vercel project settings.
+          Missing required environment variables. Please set them in your Vercel project settings and redeploy.
         </p>
+        <div className="text-left text-xs space-y-1 bg-gray-100 rounded-lg p-3">
+          <p>VITE_SUPABASE_URL: {url ? 'set' : <span className="text-red-600 font-bold">MISSING</span>}</p>
+          <p>VITE_SUPABASE_ANON_KEY: {key ? 'set' : <span className="text-red-600 font-bold">MISSING</span>}</p>
+        </div>
       </div>
     </div>
   );

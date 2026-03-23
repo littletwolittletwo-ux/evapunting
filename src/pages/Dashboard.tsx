@@ -24,12 +24,6 @@ interface BookmakerConnection {
 }
 
 export function Dashboard() {
-  // Theme Implementation Notes:
-  // - Uses Tailwind's dark: prefix for theme-aware styling
-  // - Light mode: white/gray-50 backgrounds, gray-900/gray-700 text
-  // - Dark mode: gray-900/gray-800 backgrounds, white/gray-300 text
-  // - Consistent color scheme using blue and green for accents
-  // - Ensures readability and visual hierarchy in both themes
   const { user } = useAuth();
   const [bookmakerConnections, setBookmakerConnections] = useState<BookmakerConnection[]>([]);
   const [totalProfit, setTotalProfit] = useState(0);
@@ -38,6 +32,21 @@ export function Dashboard() {
   const [winStreak, setWinStreak] = useState(0);
   const [thisWeekProfit, setThisWeekProfit] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
+
+  // All hooks MUST be called unconditionally before any early returns
+  useTokenDebt();
+
+  const totalBankroll = bookmakerConnections.reduce((sum, conn) => sum + Number(conn.balance), 0);
+  const displayedTotalProfit = analyticsData?.totalProfit ?? totalProfit;
+  const userShare = analyticsData?.userShare ?? displayedTotalProfit * 0.7;
+  const evaFee = analyticsData?.evaFee ?? displayedTotalProfit * 0.3;
+  const totalBetsPlaced = analyticsData?.totalBetsPlaced ?? 0;
+
+  const animatedBankroll = useCountUp(totalBankroll);
+  const animatedProfit = useCountUp(displayedTotalProfit);
+  const animatedUserShare = useCountUp(userShare);
+  const animatedEvaFee = useCountUp(evaFee);
+  const animatedBetsPlaced = useCountUp(totalBetsPlaced);
 
   useEffect(() => {
     if (!user) return;
@@ -124,22 +133,6 @@ export function Dashboard() {
       </div>
     );
   }
-
-  const totalBankroll = bookmakerConnections.reduce((sum, conn) => sum + Number(conn.balance), 0);
-  const displayedTotalProfit = analyticsData?.totalProfit ?? totalProfit;
-  const userShare = analyticsData?.userShare ?? displayedTotalProfit * 0.7;
-  const evaFee = analyticsData?.evaFee ?? displayedTotalProfit * 0.3;
-  const totalBetsPlaced = analyticsData?.totalBetsPlaced ?? 0;
-
-  // Token debt data used by TokenDebtCard component
-  useTokenDebt();
-
-  // Count-up animations for all stat values
-  const animatedBankroll = useCountUp(totalBankroll);
-  const animatedProfit = useCountUp(displayedTotalProfit);
-  const animatedUserShare = useCountUp(userShare);
-  const animatedEvaFee = useCountUp(evaFee);
-  const animatedBetsPlaced = useCountUp(totalBetsPlaced);
 
   if (bookmakerConnections.length === 0) {
     return (
